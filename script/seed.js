@@ -2,7 +2,18 @@
 
 const db = require('../server/db')
 const {User, Quiz, Question} = require('../server/db/models')
-
+const {
+  EXP_PSS_I,
+  EXP_PSS_II,
+  EXP_PSS_III,
+  EXP_PSS_IV,
+  EXP_PSS_V,
+  EXP_PSS_VI,
+  EXP_PSS_VII,
+  EXP_PSS_VIII,
+  EXP_PSS_IX,
+  EXP_PSS_X
+} = require('../secrets')
 async function seed() {
   await db.sync({force: true})
   console.log('db synced!')
@@ -12,61 +23,61 @@ async function seed() {
       firstName: 'Hank',
       lastName: 'Hill',
       email: 'hank@email.com',
-      password: process.env.EXP_PSS_I
+      password: EXP_PSS_I
     }),
     User.create({
       firstName: 'Peggy',
       lastName: 'Hill',
       email: 'peggy@email.com',
-      password: process.env.EXP_PSS_II
+      password: EXP_PSS_II
     }),
     User.create({
       firstName: 'Bobby',
       lastName: 'Hill',
       email: 'bobby@email.com',
-      password: process.env.EXP_PSS_III
+      password: EXP_PSS_III
     }),
     User.create({
       firstName: 'Connie',
       lastName: 'Souphanousinphone',
       email: 'connie@email.com',
-      password: process.env.EXP_PSS_IV
+      password: EXP_PSS_IV
     }),
     User.create({
       firstName: 'Dale',
       lastName: 'Gribble',
       email: 'dale@email.com',
-      password: process.env.EXP_PSS_V
+      password: EXP_PSS_V
     }),
     User.create({
       firstName: 'Nancy',
       lastName: 'Gribble',
       email: 'nancy@email.com',
-      password: process.env.EXP_PSS_VI
+      password: EXP_PSS_VI
     }),
     User.create({
       firstName: 'William',
       lastName: 'Daltrey',
       email: 'bill@email.com',
-      password: process.env.EXP_PSS_VII
+      password: EXP_PSS_VII
     }),
     User.create({
       firstName: 'Jeffrey',
       lastName: 'Boomhauer',
       email: 'boomhauer@email.com',
-      password: process.env.EXP_PSS_VIII
+      password: EXP_PSS_VIII
     }),
     User.create({
       firstName: 'Luanne',
       lastName: 'Platter',
       email: 'luanne@email.com',
-      password: process.env.EXP_PSS_IX
+      password: EXP_PSS_IX
     }),
     User.create({
       firstName: 'Lucky',
       lastName: 'Kleinschmidt',
       email: 'lucky@email.com',
-      password: process.env.EXP_PSS_X
+      password: EXP_PSS_X
     })
   ])
 
