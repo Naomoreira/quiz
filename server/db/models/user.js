@@ -3,10 +3,49 @@ const Sequelize = require('sequelize')
 const db = require('../db')
 
 const User = db.define('user', {
+  firstName: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    validate: {
+      notEmpty: {
+        args: true,
+        msg: 'Required'
+      },
+      is: {
+        args: ['^[a-z]+$', 'i'],
+        msg: 'Only letters allowed'
+      },
+      len: {
+        args: [4, 32],
+        msg: 'String length is not in this range Only 4 up to 32 characters'
+      }
+    }
+  },
+  lastName: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    validate: {
+      notEmpty: {
+        args: true,
+        msg: 'Required'
+      },
+      is: {
+        args: ['^[a-z]+$', 'i'],
+        msg: 'Only letters allowe '
+      },
+      len: {
+        args: [4, 32],
+        msg: 'String length is not in this range (Only 4 up to 32 characters)'
+      }
+    }
+  },
   email: {
     type: Sequelize.STRING,
     unique: true,
-    allowNull: false
+    allowNull: false,
+    validate: {
+      isEmail: true
+    }
   },
   password: {
     type: Sequelize.STRING,
@@ -29,6 +68,17 @@ const User = db.define('user', {
   },
   isInstructor: {
     type: Sequelize.BOOLEAN,
+    allowNull: false,
+    defaultValue: false
+  },
+  isStudent: {
+    type: Sequelize.BOOLEAN,
+    allowNull: false,
+    defaultValue: false
+  },
+  isAdmin: {
+    type: Sequelize.BOOLEAN,
+    allowNull: false,
     defaultValue: false
   }
 })

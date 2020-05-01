@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const {Question} = require('../db/models')
+const {Quiz} = require('../db/models')
 module.exports = router
 
 const isAdmin = (req, res, next) => {
@@ -29,14 +29,21 @@ const isStudent = (req, res, next) => {
   }
   next()
 }
+router.get('/', isStudent, isAdmin, isInstructor, async (req, res, next) => {
+  try {
+    const quizes = await Quiz.findAll({
+      include: [{model: User}]
+    })
+    res.json(quizes)
+  } catch (err) {
+    next(err)
+  }
+})
 
 router.get('/', isStudent, isAdmin, isInstructor, async (req, res, next) => {
   try {
-    const question = await Question.findAll({
-      include: [{model: Quiz}],
-      attributes: ['prompt']
-    })
-    res.json(question)
+    const questionAndAnswers = await Quiz.findAll()
+    res.json(questionAndAnswers)
   } catch (err) {
     next(err)
   }
@@ -45,34 +52,38 @@ router.get('/', isStudent, isAdmin, isInstructor, async (req, res, next) => {
 router.get('/:id', isStudent, isAdmin, isInstructor, async (req, res, next) => {
   const {params} = req
   try {
-    const question = await Question.findOne({
+    const quiz = await Quiz.findOne({
       where: {
         id: params.id
       },
-      attributes: ['prompt']
+      attributes: ['author']
     })
-    res.json(question)
+    res.json(quiz)
   } catch (err) {
     next(err)
   }
 })
 
-router.get('/', isAdmin, isInstructor, async (req, res, next) => {
+router.get('/:id', isAdmin, isInstructor, async (req, res, next) => {
+  const {params} = req
   try {
-    const questionAndAnswers = await Question.findAll({
-      include: [{model: Quiz}]
+    const quiz = await Quiz.findOne({
+      where: {
+        id: params.id
+      }
     })
-    res.json(questionAndAnswers)
+    res.json(quiz)
   } catch (err) {
     next(err)
   }
 })
+
 /////////////////////////////////////////////////
 router.post('/', isAdmin, isInstructor, async (req, res, next) => {
   const {body} = req
   try {
-    const newQuestion = await Question.create(body)
-    res.json(newQuestion)
+    const newQuiz = await Quiz.create(body)
+    res.json(newQuiz)
   } catch (err) {
     next(err)
   }
@@ -81,16 +92,16 @@ router.post('/', isAdmin, isInstructor, async (req, res, next) => {
 router.put('/:id', isAdmin, isInstructor, async (req, res, next) => {
   const {body, params} = req
   try {
-    const questionToModify = await Question.findOne({
+    const quizToModify = await Quiz.findOne({
       where: {
         id: params.id
       }
     })
-    if (questionToModify) {
-      const updatedQuestion = await questionToModify.update(body)
-      res.json(updatedQuestion)
+    if (quizToModify) {
+      const updatedQuiz = await quizToModify.update(body)
+      res.json(updatedQuiz)
     } else {
-      res.status(404).json('Question not found')
+      res.status(404).json('User not found')
     }
   } catch (err) {
     next(err)
@@ -102,14 +113,14 @@ router.put('/:id', isAdmin, isInstructor, async (req, res, next) => {
 router.delete('/:id', isAdmin, isInstructor, async (req, res, next) => {
   const {params} = req
   try {
-    const question = await Question.findByPk(params.id)
-    if (question) {
-      await Product.destroy({
+    const quiz = await Quiz.findByPk(params.id)
+    if (quiz) {
+      await Quiz.destroy({
         where: {
           id: params.id
         }
       })
-      res.send(`This question is deleted`)
+      res.send(`This quiz is deleted`)
     } else {
       res.status(404).json('Product not found')
     }

@@ -2,7 +2,14 @@ const Sequelize = require('sequelize')
 const db = require('../db')
 
 const Quiz = db.define('quiz', {
-  author: {
+  authorFirstName: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    validate: {
+      notEmpty: false
+    }
+  },
+  authorLastName: {
     type: Sequelize.STRING,
     allowNull: false,
     validate: {

@@ -9,6 +9,13 @@ const Question = db.define('question', {
       notEmpty: false
     }
   },
+  options: {
+    type: Sequelize.ARRAY(Sequelize.STRING),
+    allowNull: false,
+    validate: {
+      notEmpty: false
+    }
+  },
   answer: {
     type: Sequelize.STRING,
     allowNull: false,
