@@ -11,6 +11,7 @@ const isLoggedIn = (req, res, next) => {
 router.use('/users', isLoggedIn, require('./users'))
 router.use('/question', isLoggedIn, require('./question'))
 router.use('/quiz', isLoggedIn, require('./quiz'))
+router.use('/quizes', isLoggedIn, require('./quizes'))
 
 router.use((req, res, next) => {
   const error = new Error('Not Found')

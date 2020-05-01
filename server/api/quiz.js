@@ -1,5 +1,6 @@
 const router = require('express').Router()
-const {Quiz} = require('../db/models')
+const {Quiz, User} = require('../db/models')
+
 module.exports = router
 
 const isAdmin = (req, res, next) => {
@@ -20,16 +21,17 @@ const isInstructor = (req, res, next) => {
   }
   next()
 }
-const isStudent = (req, res, next) => {
-  const {user} = req
-  if (!user || !user.isStudent) {
-    const err = new Error("You're not an Student!")
-    err.status = 401
-    return next(err)
-  }
-  next()
-}
-router.get('/', isStudent, isAdmin, isInstructor, async (req, res, next) => {
+// const isStudent = (req, res, next) => {
+//   const {user} = req
+//   if (!user || !user.isStudent) {
+//     const err = new Error("You're not an Student!")
+//     err.status = 401
+//     return next(err)
+//   }
+//   next()
+// }
+
+router.get('/', async (req, res, next) => {
   try {
     const quizes = await Quiz.findAll({
       include: [{model: User}]
@@ -40,23 +42,23 @@ router.get('/', isStudent, isAdmin, isInstructor, async (req, res, next) => {
   }
 })
 
-router.get('/', isStudent, isAdmin, isInstructor, async (req, res, next) => {
-  try {
-    const questionAndAnswers = await Quiz.findAll()
-    res.json(questionAndAnswers)
-  } catch (err) {
-    next(err)
-  }
-})
+// router.get('/', isStudent, isAdmin, isInstructor, async (req, res, next) => {
+//   try {
+//     const questionAndAnswers = await Quiz.findAll()
+//     res.json(questionAndAnswers)
+//   } catch (err) {
+//     next(err)
+//   }
+// })
 
-router.get('/:id', isStudent, isAdmin, isInstructor, async (req, res, next) => {
+router.get('/:id', async (req, res, next) => {
   const {params} = req
   try {
     const quiz = await Quiz.findOne({
       where: {
         id: params.id
       },
-      attributes: ['author']
+      include: [{model: User}]
     })
     res.json(quiz)
   } catch (err) {
@@ -64,19 +66,19 @@ router.get('/:id', isStudent, isAdmin, isInstructor, async (req, res, next) => {
   }
 })
 
-router.get('/:id', isAdmin, isInstructor, async (req, res, next) => {
-  const {params} = req
-  try {
-    const quiz = await Quiz.findOne({
-      where: {
-        id: params.id
-      }
-    })
-    res.json(quiz)
-  } catch (err) {
-    next(err)
-  }
-})
+// router.get('/:id', isAdmin, isInstructor, async (req, res, next) => {
+//   const {params} = req
+//   try {
+//     const quiz = await Quiz.findOne({
+//       where: {
+//         id: params.id
+//       }
+//     })
+//     res.json(quiz)
+//   } catch (err) {
+//     next(err)
+//   }
+// })
 
 /////////////////////////////////////////////////
 router.post('/', isAdmin, isInstructor, async (req, res, next) => {

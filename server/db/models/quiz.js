@@ -22,6 +22,13 @@ const Quiz = db.define('quiz', {
     validate: {
       notEmpty: false
     }
+  },
+  description: {
+    type: Sequelize.STRING,
+    allowNull: false,
+    validate: {
+      notEmpty: false
+    }
   }
 })
 

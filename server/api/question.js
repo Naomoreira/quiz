@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const {Question} = require('../db/models')
+const {Question, Quiz} = require('../db/models')
 module.exports = router
 
 const isAdmin = (req, res, next) => {
@@ -30,11 +30,12 @@ const isStudent = (req, res, next) => {
   next()
 }
 
-router.get('/', isStudent, isAdmin, isInstructor, async (req, res, next) => {
+router.get('/', async (req, res, next) => {
   try {
     const question = await Question.findAll({
-      include: [{model: Quiz}],
-      attributes: ['prompt']
+      // ,
+      attributes: ['prompt', 'options'],
+      include: [{model: Quiz}]
     })
     res.json(question)
   } catch (err) {
@@ -42,7 +43,28 @@ router.get('/', isStudent, isAdmin, isInstructor, async (req, res, next) => {
   }
 })
 
-router.get('/:id', isStudent, isAdmin, isInstructor, async (req, res, next) => {
+// router.get('/answers', async (req, res, next) => {
+//   try {
+//     const question = await Question.findAll({
+//       include: [{model: Quiz}]
+//     })
+//     res.json(question)
+//   } catch (err) {
+//     next(err)
+//   }
+// })
+
+router.get('/quiz/:quizId', async (req, res, next) => {
+  const {quizId} = req.params
+  try {
+    const question = await Question.findByQuiz(quizId)
+    res.json(question)
+  } catch (error) {
+    next(error)
+  }
+})
+
+router.get('/:id', async (req, res, next) => {
   const {params} = req
   try {
     const question = await Question.findOne({
@@ -57,7 +79,7 @@ router.get('/:id', isStudent, isAdmin, isInstructor, async (req, res, next) => {
   }
 })
 
-router.get('/', isAdmin, isInstructor, async (req, res, next) => {
+router.get('/Answers', isAdmin, isInstructor, async (req, res, next) => {
   try {
     const questionAndAnswers = await Question.findAll({
       include: [{model: Quiz}]

@@ -86,12 +86,14 @@ async function seed() {
       authorFirstName: 'Dale',
       authorLastName: 'Gribble',
       title: 'Plankton Test',
+      description: "It's a short description",
       userId: 5
     }),
     Quiz.create({
       authorFirstName: 'Luanne',
       authorLastName: 'Platter',
-      title: 'Plankton Test',
+      title: 'Sea life Test',
+      description: "It's a short description",
       userId: 9
     })
   ])

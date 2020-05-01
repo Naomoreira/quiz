@@ -1,5 +1,6 @@
 const Sequelize = require('sequelize')
 const db = require('../db')
+const Quiz = require('./quiz')
 
 const Question = db.define('question', {
   prompt: {
@@ -25,4 +26,14 @@ const Question = db.define('question', {
   }
 })
 
+Question.findByQuiz = function(quizId) {
+  return Question.findAll({
+    include: {
+      model: Quiz,
+      where: {
+        id: quizId
+      }
+    }
+  })
+}
 module.exports = Question
